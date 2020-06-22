@@ -867,7 +867,7 @@ class NuScenesExplorer:
             if use_flat_vehicle_coordinates:
                 ego_token = ref_sd_record['ego_pose_token']
                 ego_box = self.nusc.get_box_ego(ego_token)
-                c = np.array(128, 0, 1280)/255.0 #purple
+                c = np.array([128, 0, 128])/255.0 #purple
                 ego_box.render(ax, view=np.eye(4), colors=(c, c, c))
 
             # Get boxes in lidar frame.
