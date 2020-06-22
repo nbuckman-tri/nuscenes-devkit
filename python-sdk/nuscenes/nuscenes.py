@@ -845,7 +845,7 @@ class NuScenesExplorer:
                 self.render_ego_centric_map(sample_data_token=sample_data_token, axes_limit=axes_limit, ax=ax)
 
             # Show point cloud.
-            poinego_pose_tokents = view_points(pc.points[:3, :], viewpoint, normalize=False)
+            points = view_points(pc.points[:3, :], viewpoint, normalize=False)
             dists = np.sqrt(np.sum(pc.points[:2, :] ** 2, axis=0))
             colors = np.minimum(1, dists / axes_limit / np.sqrt(2))
             point_scale = 0.2 if sensor_modality == 'lidar' else 3.0
