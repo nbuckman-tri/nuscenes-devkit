@@ -270,6 +270,18 @@ class NuScenes:
         record = self.get('sample_annotation', sample_annotation_token)
         return Box(record['translation'], record['size'], Quaternion(record['rotation']),
                    name=record['category_name'], token=record['token'])
+    
+    def get_box_ego(self, ego_pose_token: str) -> Box:
+        '''
+        Instantiates a Box class from a ego pose record.  Note that we have to make-up some
+        parts of the box record.
+        :param ego_pose_token: Unique ego_pose_token identifier.
+        '''
+        record = self.get('ego_pose', ego_pose_token)
+        ego_size = (1.730, 4.084, 1.562) #Renault Zoe
+        ego_translation = (0, 0, 0)
+        return Box(ego_translation, ego_size, Quaternion(record['rotation']),
+                    name='ego', token=record['token'])
 
     def get_boxes(self, sample_data_token: str) -> List[Box]:
         """
@@ -852,6 +864,10 @@ class NuScenesExplorer:
 
             # Show ego vehicle.
             ax.plot(0, 0, 'x', color='red')
+            ego_token = sample_rec['ego_pose_token']
+            ego_box = self.nusc.get_box_ego(ego_token)
+            c = np.array(128, 0, 1280)/255.0 #purple
+            ego_box.render(ax, view=np.eye(4), colors=(c, c, c))
 
             # Get boxes in lidar frame.
             _, boxes, _ = self.nusc.get_sample_data(ref_sd_token, box_vis_level=box_vis_level,
@@ -862,6 +878,7 @@ class NuScenesExplorer:
                 for box in boxes:
                     c = np.array(self.get_color(box.name)) / 255.0
                     box.render(ax, view=np.eye(4), colors=(c, c, c))
+
 
             # Limit visible range.
             ax.set_xlim(-axes_limit, axes_limit)
