@@ -845,7 +845,7 @@ class NuScenesExplorer:
                 self.render_ego_centric_map(sample_data_token=sample_data_token, axes_limit=axes_limit, ax=ax)
 
             # Show point cloud.
-            points = view_points(pc.points[:3, :], viewpoint, normalize=False)
+            poinego_pose_tokents = view_points(pc.points[:3, :], viewpoint, normalize=False)
             dists = np.sqrt(np.sum(pc.points[:2, :] ** 2, axis=0))
             colors = np.minimum(1, dists / axes_limit / np.sqrt(2))
             point_scale = 0.2 if sensor_modality == 'lidar' else 3.0
@@ -864,10 +864,11 @@ class NuScenesExplorer:
 
             # Show ego vehicle.
             ax.plot(0, 0, 'x', color='red')
-            ego_token = sample_rec['ego_pose_token']
-            ego_box = self.nusc.get_box_ego(ego_token)
-            c = np.array(128, 0, 1280)/255.0 #purple
-            ego_box.render(ax, view=np.eye(4), colors=(c, c, c))
+            if use_flat_vehicle_coordinates:
+                ego_token = ref_sd_record['ego_pose_token']
+                ego_box = self.nusc.get_box_ego(ego_token)
+                c = np.array(128, 0, 1280)/255.0 #purple
+                ego_box.render(ax, view=np.eye(4), colors=(c, c, c))
 
             # Get boxes in lidar frame.
             _, boxes, _ = self.nusc.get_sample_data(ref_sd_token, box_vis_level=box_vis_level,
