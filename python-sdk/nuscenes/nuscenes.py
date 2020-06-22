@@ -280,8 +280,8 @@ class NuScenes:
         record = self.get('ego_pose', ego_pose_token)
         ego_size = (1.730, 4.084, 1.562) #Renault Zoe
         ego_translation = (0, 0, 0)
-        ego_rotation = (0, 0, 0, 0)
-        return Box(ego_translation, ego_size, Quaternion(ego_rotation),
+        # ego_rotation = (0, 0, 0, 0)
+        return Box(ego_translation, ego_size, Quaternion(record['rotation']),
                     name='ego', token=record['token'])
 
     def get_boxes(self, sample_data_token: str) -> List[Box]:
